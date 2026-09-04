@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quelshifish aka David Tuschhoff</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0d0d0d;
+            cursor: default;
+            overflow-x: hidden;
+            font-family: 'Inter', sans-serif;
+            color: #e0e0e0;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        .watermark {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-20deg);
+            font-size: 9rem;
+            font-weight: 900;
+            color: rgba(255, 255, 255, 0.025);
+            pointer-events: none;
+            z-index: 1;
+            white-space: nowrap;
+            letter-spacing: 8px;
+            user-select: none;
+            text-transform: uppercase;
+        }
+
+        .audio-controls {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            z-index: 10001;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            background: rgba(20, 20, 20, 0.9);
+            padding: 10px 15px;
+            border-radius: 50px;
+            border: 1px solid #333;
+            backdrop-filter: blur(10px);
+        }
+
+        .audio-btn {
+            background: transparent;
+            border: none;
+            color: #fff;
+            width: 40px;
+            height: 40px;
+            font-size: 1.4rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+            border-radius: 50%;
+        }
+
+        .audio-btn:hover {
+            background: #2a2a2a;
+        }
+
+        .volume-slider {
+            width: 100px;
+            accent-color: #fff;
+            cursor: pointer;
+        }
+
+        #splash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: #0d0d0d;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            cursor: pointer;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+            gap: 30px;
+        }
+
+        #splash.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .splash-text {
+            font-family: 'Inter', sans-serif;
+            font-size: 6rem;
+            font-weight: 900;
+            color: #fff;
+            letter-spacing: 8px;
+            user-select: none;
+            text-align: center;
+            text-transform: uppercase;
+            animation: splashPulse 1.5s ease-in-out infinite;
+        }
+
+        .splash-sub {
+            font-size: 1.2rem;
+            color: #666;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        @keyframes splashPulse {
+            0%, 100% { 
+                opacity: 1;
+                text-shadow: 0 0 60px rgba(255, 255, 255, 0.2);
+            }
+            50% { 
+                opacity: 0.6;
+                text-shadow: 0 0 100px rgba(255, 255, 255, 0.1);
+            }
+        }
+
+        #main-content {
+            display: none;
+            min-height: 100vh;
+            background: #0d0d0d;
+            position: relative;
+            z-index: 2;
+            padding: 60px 20px;
+            animation: fadeIn 0.6s ease;
+        }
+
+        #main-content.visible {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .header-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 4.5rem;
+            font-weight: 900;
+            color: #fff;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            line-height: 1.1;
+        }
+
+        .header-subtitle {
+            font-size: 1.3rem;
+            color: #888;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .header-tag {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 40px;
+            letter-spacing: 1px;
+            font-style: italic;
+        }
+
+        .header-images {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .header-image {
+            max-width: 280px;
+            width: 100%;
+            border: 2px solid #2a2a2a;
+            transition: all 0.4s ease;
+            cursor: pointer;
+            border-radius: 12px;
+        }
+
+        .header-image:hover {
+            border-color: #fff;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .section {
+            max-width: 750px;
+            margin: 0 auto 25px auto;
+            background: #141414;
+            border: 1px solid #222;
+            padding: 35px;
+            position: relative;
+            z-index: 2;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .section:hover {
+            border-color: #333;
+            background: #161616;
+        }
+
+        .section-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border-bottom: 2px solid #2a2a2a;
+            padding-bottom: 15px;
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid #222;
+            margin: 25px 0;
+        }
+
+        .info-row {
+            display: flex;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            color: #aaa;
+            font-size: 1.1rem;
+            gap: 15px;
+        }
+
+        .info-label {
+            color: #ccc;
+            font-weight: 600;
+            width: 180px;
+            flex-shrink: 0;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-value {
+            color: #ddd;
+            word-break: break-all;
+            font-size: 1.05rem;
+            font-weight: 400;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 50px 20px;
+            background: #141414;
+            border: 1px solid #222;
+            position: relative;
+            z-index: 2;
+            border-radius: 12px;
+        }
+
+        .footer-name {
+            font-family: 'Inter', sans-serif;
+            font-size: 3rem;
+            font-weight: 900;
+            color: #fff;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .footer-images {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .footer-image {
+            max-width: 180px;
+            width: 100%;
+            border: 2px solid #2a2a2a;
+            transition: all 0.4s ease;
+            cursor: pointer;
+            border-radius: 12px;
+        }
+
+        .footer-image:hover {
+            border-color: #fff;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .footer-contact {
+            font-size: 1.3rem;
+            color: #ccc;
+            line-height: 2.2;
+            font-weight: 500;
+        }
+
+        .footer-contact a {
+            color: #888;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer-contact a:hover {
+            color: #fff;
+        }
+
+        .geficht-by {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: #666;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-top: 40px;
+            z-index: 2;
+            position: relative;
+        }
+
+        #lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.97);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            animation: lightboxIn 0.2s ease;
+        }
+
+        #lightbox.visible {
+            display: flex;
+        }
+
+        @keyframes lightboxIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        #lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+            border: 2px solid #333;
+            object-fit: contain;
+            border-radius: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .splash-text {
+                font-size: 3rem;
+                letter-spacing: 4px;
+            }
+            .header-title {
+                font-size: 2.5rem;
+            }
+            .section-title {
+                font-size: 1.4rem;
+            }
+            .info-label {
+                width: 120px;
+                font-size: 0.85rem;
+            }
+            .info-value {
+                font-size: 0.95rem;
+            }
+            .footer-name {
+                font-size: 2rem;
+            }
+            .header-image {
+                max-width: 200px;
+            }
+            .footer-image {
+                max-width: 130px;
+            }
+            .footer-contact {
+                font-size: 1.1rem;
+            }
+            .watermark {
+                font-size: 4rem;
+            }
+            .volume-slider {
+                width: 70px;
+            }
+            .audio-controls {
+                top: 15px;
+                right: 15px;
+                padding: 8px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="watermark">MADE BY AROX & SILENCE</div>
+
+    <div class="audio-controls">
+        <button class="audio-btn" id="mute-btn" onclick="toggleMute()">🔊</button>
+        <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" value="50" onchange="adjustVolume()">
+    </div>
+
+    <audio id="audio-player" loop>
+        <source src="sicknsick.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="splash" onclick="enterSite()">
+        <div class="splash-text">CLICK ME</div>
+        <div class="splash-sub">Click to enter</div>
+    </div>
+
+    <div id="main-content">
+        
+        <div class="header">
+            <div class="header-title">Quelshifish</div>
+            <div class="header-subtitle">aka David Tuschhoff</div>
+            <div class="header-tag">Möchtegern Beefer</div>
+            <div class="header-images">
+                <img src="https://cdn.discordapp.com/attachments/1544082603286466594/1545208525452607579/image.png?ex=6a9b4f15&is=6a99fd95&hm=53b6387a4ff7fe42dbace527fe191e28fc55799df7c47005ea9d0368e90e20f3&" alt="Quelshifish 1" class="header-image" onclick="openLightbox(this.src)">
+                <img src="https://cdn.discordapp.com/attachments/1544082603286466594/1545208562425397328/image.png?ex=6a9b4f1d&is=6a99fd9d&hm=0c2af081cabbc5db57eb60d0a28105f6d725eac4196acf7501a6d1332dfed0b2&" alt="Quelshifish 2" class="header-image" onclick="openLightbox(this.src)">
+                <img src="https://cdn.discordapp.com/attachments/1544082603286466594/1545208562806947892/image.png?ex=6a9b4f1d&is=6a99fd9d&hm=8bfe9888bef7277c774894d51ac6adab4234d0b2ad43da3b9d2c0997bb96e215&" alt="Quelshifish 3" class="header-image" onclick="openLightbox(this.src)">
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Quelshifish Full</div>
+            
+            <div class="info-row">
+                <span class="info-label">Name</span>
+                <span class="info-value">David Tuschhoff</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">City</span>
+                <span class="info-value">Köln</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">ISP</span>
+                <span class="info-value">AS8422 NetCologne Gesellschaft fur Telekommunikation mbH</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">IP Address</span>
+                <span class="info-value">87.79.112.247</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">PC Name</span>
+                <span class="info-value">DESKTOP-19QCMUN</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">OS Version</span>
+                <span class="info-value">Windows 11 (Home)</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">GPU</span>
+                <span class="info-value">NVIDIA GeForce RTX 4060 TI</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">CPU</span>
+                <span class="info-value">AMD Ryzen 5 7600 6-Core Processor</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">RAM</span>
+                <span class="info-value">31GB (31895)</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Phone Number</span>
+                <span class="info-value">+4915738376079</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Discord Quelchifish</div>
+            
+            <div class="info-row">
+                <span class="info-label">Discord ID</span>
+                <span class="info-value">1445474142953406545</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Username</span>
+                <span class="info-value">quelchifish</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Nitro</span>
+                <span class="info-value">No</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Capture ID</span>
+                <span class="info-value">bbc1e381-eeab-47c2-8876-707aae522087</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Client</span>
+                <span class="info-value">David@DESKTOP-19QCMUN</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">2FA Enabled</span>
+                <span class="info-value">No</span>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="info-row">
+                <span class="info-label">Email</span>
+                <span class="info-value">s.tuschhoff@netcologne.de</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Password</span>
+                <span class="info-value">discord8365!</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Minecraft Quelchifish</div>
+            
+            <div class="info-row">
+                <span class="info-label">Username</span>
+                <span class="info-value">Quelchifish</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">UUID</span>
+                <span class="info-value">ad92f1dd-2946-4a2a-9e66-6d6be891431f</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Email</span>
+                <span class="info-value">Unknown</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Password</span>
+                <span class="info-value">Unknown</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Social Logins</div>
+            
+            <div class="info-row">
+                <span class="info-label">Discord</span>
+                <span class="info-value">s.tuschhoff@netcologne.de | discord8365!</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Paypal</span>
+                <span class="info-value">s.tuschhoff@netcologne.de | Urlaubisttoll!</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Instagram</span>
+                <span class="info-value">david.t.13 | instagram8365!</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Twitch</span>
+                <span class="info-value">davidtuschhoff123@gmail.com | twitch8365!</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Github</span>
+                <span class="info-value">Quellenfish | github8365!</span>
+            </div>
+        </div>
+
+        <div class="geficht-by">GEFICKT BY SOMEONE</div>
+
+        <div class="footer">
+            <div class="footer-name">emre kocamaz</div>
+            <div class="footer-images">
+                <img src="https://cdn.discordapp.com/attachments/1544082603286466594/1545187344246640670/IMG_8248.png?ex=6a9b3b5b&is=6a99e9db&hm=559186e6f3c2404fd0bf7a9a0cdf71f5a69d5978b51b2fa5caf851ad7a67e08f&" alt="Emre 1" class="footer-image" onclick="openLightbox(this.src)">
+                <img src="https://cdn.discordapp.com/attachments/1544082603286466594/1545183263176396810/IMG_8247.png?ex=6a9b378e&is=6a99e60e&hm=b4e949e0a93821abe15888fa3aab8bfee0bfc76bfa29127761c268f0edf2e740&" alt="Emre 2" class="footer-image" onclick="openLightbox(this.src)">
+                <img src="https://cdn.discordapp.com/attachments/1544082603286466594/1545182388563218514/IMG_8246.png?ex=6a9b36bd&is=6a99e53d&hm=fa80af0c7c18078fe8edab382403d45b33092221e3a13cea5dca1732f80642ff&" alt="Emre 3" class="footer-image" onclick="openLightbox(this.src)">
+            </div>
+            <div class="footer-contact">
+                Hans-Dietrich-Straße 13<br>
+                huseyinkocamaz46@icloud.com<br>
+                +49 174 8342286<br>
+                Insta: <a href="https://instagram.com/emr3.kmz" target="_blank">emr3.kmz</a>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="lightbox" onclick="closeLightbox()">
+        <img id="lightbox-img" src="" alt="Enlarged image">
+    </div>
+
+    <script>
+        const audio = document.getElementById('audio-player');
+        const muteBtn = document.getElementById('mute-btn');
+        const volumeSlider = document.getElementById('volume-slider');
+        let isMuted = false;
+
+        audio.volume = 0.5;
+        audio.loop = true;
+
+        document.addEventListener('click', function initAudio() {
+            audio.play().catch(() => {});
+            document.removeEventListener('click', initAudio);
+        });
+
+        function enterSite() {
+            const splash = document.getElementById('splash');
+            const main = document.getElementById('main-content');
+            splash.classList.add('hidden');
+            main.classList.add('visible');
+            audio.play().catch(() => {});
+        }
+
+        function toggleMute() {
+            isMuted = !isMuted;
+            audio.muted = isMuted;
+            muteBtn.textContent = isMuted ? '🔇' : '🔊';
+        }
+
+        function adjustVolume() {
+            const vol = parseInt(volumeSlider.value);
+            audio.volume = vol / 100;
+            audio.muted = vol === 0;
+            isMuted = vol === 0;
+            muteBtn.textContent = isMuted ? '🔇' : '🔊';
+        }
+
+        function openLightbox(src) {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            lightboxImg.src = src;
+            lightbox.classList.add('visible');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.remove('visible');
+            document.body.style.overflow = 'auto';
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeLightbox();
+            }
+        });
+
+        setTimeout(() => {
+            const splash = document.getElementById('splash');
+            if (!splash.classList.contains('hidden')) {
+                enterSite();
+            }
+        }, 5000);
+    </script>
+
+</body>
+</html>
