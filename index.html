@@ -1,30 +1,157 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Arox Leak Viewer v5
-Home + 5 Tabs mit Passwortschutz
-"""
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arox Leak Viewer</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
-import os
-import re
-import zipfile
-import shutil
-import tempfile
-import tkinter as tk
-from tkinter import filedialog, scrolledtext, ttk, messagebox, simpledialog
-from pathlib import Path
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            background: #0d0d0d;
+            font-family: 'Inter', sans-serif;
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
 
-PASSWORDS = {
-    "home": "arox2025",
-    "Quelshifish": "quelshifish2025",
-    "Emre": "emre2025",
-    "Deniz": "deniz2025",
-    "Luan": "luan2025",
-    "Lakum": "lakum2025"
-}
+        .tab-container {
+            display: flex;
+            background: #111;
+            border-bottom: 1px solid #222;
+            padding: 0 10px;
+            flex-wrap: wrap;
+        }
 
-HOME_TEXT = """=== AROX LEAKS ===
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: #888;
+            padding: 15px 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab-btn:hover {
+            color: #fff;
+            background: #1a1a1a;
+        }
+
+        .tab-btn.active {
+            color: #fff;
+            border-bottom-color: #fff;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 20px;
+            min-height: calc(100vh - 50px);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .text-box {
+            background: #0a0a0a;
+            border: 1px solid #222;
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #ddd;
+            white-space: pre-wrap;
+            word-break: break-all;
+            min-height: 400px;
+        }
+
+        .lock-overlay {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 400px;
+            background: #0a0a0a;
+            border: 1px solid #222;
+            border-radius: 8px;
+            gap: 15px;
+        }
+
+        .lock-icon {
+            font-size: 3rem;
+        }
+
+        .lock-text {
+            font-size: 1.2rem;
+            color: #666;
+            text-align: center;
+        }
+
+        .password-input {
+            background: #111;
+            border: 1px solid #333;
+            color: #fff;
+            padding: 10px 15px;
+            font-size: 1rem;
+            border-radius: 5px;
+            width: 250px;
+            text-align: center;
+            font-family: 'Consolas', monospace;
+        }
+
+        .password-input:focus {
+            outline: none;
+            border-color: #fff;
+        }
+
+        .unlock-btn {
+            background: #1a1a1a;
+            border: 1px solid #444;
+            color: #fff;
+            padding: 10px 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .unlock-btn:hover {
+            background: #2a2a2a;
+            border-color: #fff;
+        }
+
+        .error-text {
+            color: #ff4444;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="tab-container">
+        <button class="tab-btn active" onclick="switchTab('home')">Home</button>
+        <button class="tab-btn" onclick="switchTab('quelshifish')">Quelshifish</button>
+        <button class="tab-btn" onclick="switchTab('emre')">Emre</button>
+        <button class="tab-btn" onclick="switchTab('deniz')">Deniz</button>
+        <button class="tab-btn" onclick="switchTab('luan')">Luan</button>
+        <button class="tab-btn" onclick="switchTab('lakum')">Lakum</button>
+    </div>
+
+    <!-- HOME -->
+    <div id="tab-home" class="tab-content active">
+        <div class="text-box">=== AROX LEAKS ===
 
 This page is from Someone and Arox.
 
@@ -42,10 +169,214 @@ Password for each tab:
 
 Example: quelshifish2025
 
-Made by Arox & Silence
-"""
+Made by Arox &amp; Silence</div>
+    </div>
 
-LUAN_TEXT = """=== EXTRACTED DATA ===
+    <!-- QUELSHIFISH -->
+    <div id="tab-quelshifish" class="tab-content">
+        <div id="lock-quelshifish" class="lock-overlay">
+            <div class="lock-icon">🔒</div>
+            <div class="lock-text">Locked<br>Password: quelshifish2025</div>
+            <input type="password" id="pw-quelshifish" class="password-input" placeholder="Enter password" onkeydown="if(event.key==='Enter') unlockTab('quelshifish')">
+            <button class="unlock-btn" onclick="unlockTab('quelshifish')">Unlock</button>
+            <div id="error-quelshifish" class="error-text"></div>
+        </div>
+        <div id="content-quelshifish" style="display:none;">
+            <div class="text-box">=== EXTRACTED DATA ===
+
+Title: Quelshifish
+aka: David Tuschhoff
+Tag: Möchtegern Beefer
+
+--- FULL INFO ---
+Name: David Tuschhoff
+City: Köln
+ISP: AS8422 NetCologne Gesellschaft fur Telekommunikation mbH
+IP Address: 87.79.112.247
+PC Name: DESKTOP-19QCMUN
+OS Version: Windows 11 (Home)
+GPU: NVIDIA GeForce RTX 4060 TI
+CPU: AMD Ryzen 5 7600 6-Core Processor
+RAM: 31GB (31895)
+Phone Number: +4915738376079
+
+--- DISCORD ---
+Discord ID: 1445474142953406545
+Username: quelchifish
+Nitro: No
+Capture ID: bbc1e381-eeab-47c2-8876-707aae522087
+Client: David@DESKTOP-19QCMUN
+2FA Enabled: No
+Email: s.tuschhoff@netcologne.de
+Password: discord8365!
+
+--- MINECRAFT ---
+Username: Quelchifish
+UUID: ad92f1dd-2946-4a2a-9e66-6d6be891431f
+Email: Unknown
+Password: Unknown
+
+--- SOCIAL LOGINS ---
+Discord: s.tuschhoff@netcologne.de | discord8365!
+Paypal: s.tuschhoff@netcologne.de | Urlaubisttoll!
+Instagram: david.t.13 | instagram8365!
+Twitch: davidtuschhoff123@gmail.com | twitch8365!
+Github: Quellenfish | github8365!
+
+--- FOOTER ---
+Footer Name: emre kocamaz
+Address: Hans-Dietrich-Straße 13
+Footer Email: huseyinkocamaz46@icloud.com
+Footer Phone: +49 174 8342286
+Footer Insta: emr3.kmz
+
+--- FILES FOUND ---
+Images: 6
+Audio: 0</div>
+        </div>
+    </div>
+
+    <!-- EMRE -->
+    <div id="tab-emre" class="tab-content">
+        <div id="lock-emre" class="lock-overlay">
+            <div class="lock-icon">🔒</div>
+            <div class="lock-text">Locked<br>Password: emre2025</div>
+            <input type="password" id="pw-emre" class="password-input" placeholder="Enter password" onkeydown="if(event.key==='Enter') unlockTab('emre')">
+            <button class="unlock-btn" onclick="unlockTab('emre')">Unlock</button>
+            <div id="error-emre" class="error-text"></div>
+        </div>
+        <div id="content-emre" style="display:none;">
+            <div class="text-box">=== EXTRACTED DATA ===
+
+Title: emre
+aka: Unknown
+Tag: Unknown
+
+--- FULL INFO ---
+Name: emre kocamaz
+Address: Hans-Dietrich-Straße 13
+City: Unknown
+ISP: Unknown
+IP Address: Unknown
+PC Name: Unknown
+OS Version: Unknown
+GPU: Unknown
+CPU: Unknown
+RAM: Unknown
+Phone Number: +49 174 8342286
+
+--- DISCORD ---
+Discord ID: Unknown
+Username: Unknown
+Nitro: Unknown
+Capture ID: Unknown
+Client: Unknown
+2FA Enabled: Unknown
+Email: huseyinkocamaz46@icloud.com
+Password: Unknown
+
+--- MINECRAFT ---
+Username: Unknown
+UUID: Unknown
+Email: Unknown
+Password: Unknown
+
+--- SOCIAL LOGINS ---
+Discord: Unknown
+Paypal: Unknown
+Instagram: emr3.kmz
+Twitch: Unknown
+Github: Unknown
+
+--- FOOTER ---
+Footer Name: emre kocamaz
+Address: Hans-Dietrich-Straße 13
+Footer Email: huseyinkocamaz46@icloud.com
+Footer Phone: +49 174 8342286
+Footer Insta: emr3.kmz
+
+--- FILES FOUND ---
+Images: 3
+Audio: 0</div>
+        </div>
+    </div>
+
+    <!-- DENIZ -->
+    <div id="tab-deniz" class="tab-content">
+        <div id="lock-deniz" class="lock-overlay">
+            <div class="lock-icon">🔒</div>
+            <div class="lock-text">Locked<br>Password: deniz2025</div>
+            <input type="password" id="pw-deniz" class="password-input" placeholder="Enter password" onkeydown="if(event.key==='Enter') unlockTab('deniz')">
+            <button class="unlock-btn" onclick="unlockTab('deniz')">Unlock</button>
+            <div id="error-deniz" class="error-text"></div>
+        </div>
+        <div id="content-deniz" style="display:none;">
+            <div class="text-box">=== EXTRACTED DATA ===
+
+Title: deniz
+aka: Monte
+Tag: Unknown
+
+--- FULL INFO ---
+Name: deniz
+PC Name: DENIZABIII
+City: Neuwied
+ISP: AS3320 Deutsche Telekom AG
+Timezone: Unknown
+IP Address: 84.150.138.103
+OS Version: Windows 11 (Home)
+GPU: NVIDIA GeForce RTX 4060
+CPU: Intel
+RAM: 15 GB
+Phone Number: +49015172645813
+
+--- DISCORD ---
+Discord ID: 78445129419350073776
+Username: gmail.com
+Nitro: Unknown
+Capture ID: 3ef62867-8144-4eaf-9f50-0c3f6e76f48f
+Client: firefox-b-d
+2FA Enabled: no
+Email: denizrmnikmr@gmail.com
+Password: Sng334228s
+
+--- MINECRAFT ---
+Username: Unknown
+UUID: 3ef62867-8144-4eaf-9f50-0c3f6e76f48f
+Email: Unknown
+Password: Unknown
+
+--- SOCIAL LOGINS ---
+Discord: Unknown
+Paypal: Unknown
+Instagram: &amp; TikTok | https://pfps.gg/banners/animated#google_vignette
+Twitch: https://www.twitch.tv/
+Github: Unknown
+
+--- FOOTER ---
+Footer Name: Müssen
+Address: Unknown
+Footer Email: efedeniz2603@icloud.com
+Footer Phone: +49015172645813
+Footer Insta: abbas.w47
+
+--- FILES FOUND ---
+Images: 1
+Audio: 0</div>
+        </div>
+    </div>
+
+    <!-- LUAN -->
+    <div id="tab-luan" class="tab-content">
+        <div id="lock-luan" class="lock-overlay">
+            <div class="lock-icon">🔒</div>
+            <div class="lock-text">Locked<br>Password: luan2025</div>
+            <input type="password" id="pw-luan" class="password-input" placeholder="Enter password" onkeydown="if(event.key==='Enter') unlockTab('luan')">
+            <button class="unlock-btn" onclick="unlockTab('luan')">Unlock</button>
+            <div id="error-luan" class="error-text"></div>
+        </div>
+        <div id="content-luan" style="display:none;">
+            <div class="text-box">=== EXTRACTED DATA ===
 
 Title: luanb
 aka: Unknown
@@ -96,328 +427,123 @@ Footer Insta: emr
 
 --- FILES FOUND ---
 Images: 1
-Audio: 0"""
+Audio: 0</div>
+        </div>
+    </div>
 
-DENIZ_TEXT = """=== EXTRACTED DATA ===
+    <!-- LAKUM -->
+    <div id="tab-lakum" class="tab-content">
+        <div id="lock-lakum" class="lock-overlay">
+            <div class="lock-icon">🔒</div>
+            <div class="lock-text">Locked<br>Password: lakum2025</div>
+            <input type="password" id="pw-lakum" class="password-input" placeholder="Enter password" onkeydown="if(event.key==='Enter') unlockTab('lakum')">
+            <button class="unlock-btn" onclick="unlockTab('lakum')">Unlock</button>
+            <div id="error-lakum" class="error-text"></div>
+        </div>
+        <div id="content-lakum" style="display:none;">
+            <div class="text-box">=== EXTRACTED DATA ===
 
-Title: deniz
-aka: Monte
+Title: Lakum
+aka: Unknown
 Tag: Unknown
 
 --- FULL INFO ---
-Name: deniz
-PC Name: DENIZABIII
-City: Neuwied
-ISP: AS3320 Deutsche Telekom AG
-Timezone: Unknown
-IP Address: 84.150.138.103
-OS Version: Windows 11 (Home)
-GPU: NVIDIA GeForce RTX 4060
-CPU: Intel
-RAM: 15 GB
-Phone Number: +49015172645813
+Name: Unknown
+PC Name: Unknown
+City: Unknown
+ISP: Unknown
+IP Address: Unknown
+OS Version: Unknown
+GPU: Unknown
+CPU: Unknown
+RAM: Unknown
+Phone Number: Unknown
 
 --- DISCORD ---
-Discord ID: 78445129419350073776
-Username: gmail.com
+Discord ID: Unknown
+Username: Unknown
 Nitro: Unknown
-Capture ID: 3ef62867-8144-4eaf-9f50-0c3f6e76f48f
-Client: firefox-b-d
-2FA Enabled: no
-Email: denizrmnikmr@gmail.com
-Password: Sng334228s
+Capture ID: Unknown
+Client: Unknown
+2FA Enabled: Unknown
+Email: Unknown
+Password: Unknown
 
 --- MINECRAFT ---
 Username: Unknown
-UUID: 3ef62867-8144-4eaf-9f50-0c3f6e76f48f
+UUID: Unknown
 Email: Unknown
 Password: Unknown
 
 --- SOCIAL LOGINS ---
 Discord: Unknown
 Paypal: Unknown
-Instagram: & TikTok | https://pfps.gg/banners/animated#google_vignette
-Twitch: https://www.twitch.tv/
+Instagram: Unknown
+Twitch: Unknown
 Github: Unknown
 
 --- FOOTER ---
-Footer Name: Müssen
+Footer Name: Unknown
 Address: Unknown
-Footer Email: efedeniz2603@icloud.com
-Footer Phone: +49015172645813
-Footer Insta: abbas.w47
+Footer Email: Unknown
+Footer Phone: Unknown
+Footer Insta: Unknown
 
 --- FILES FOUND ---
-Images: 1
-Audio: 0"""
+Images: 0
+Audio: 0</div>
+        </div>
+    </div>
 
+    <script>
+        const passwords = {
+            quelshifish: 'quelshifish2025',
+            emre: 'emre2025',
+            deniz: 'deniz2025',
+            luan: 'luan2025',
+            lakum: 'lakum2025'
+        };
 
-class SimpleExtractor:
-    def __init__(self, folder_path):
-        self.folder = Path(folder_path)
-        self.lines = []
-        self.raw_text = ""
-    
-    def read_all_lines(self):
-        exts = ['*.txt', '*.log', '*.json', '*.xml', '*.csv', '*.html', '*.htm',
-                '*.md', '*.ini', '*.conf', '*.cfg', '*.sql', '*.bak', '*.dat',
-                '*.info', '*.nfo', '*.yaml', '*.yml']
-        
-        all_content = []
-        
-        for ext in exts:
-            for f in self.folder.rglob(ext):
-                try:
-                    content = f.read_text(encoding='utf-8', errors='ignore')
-                    all_content.append(content)
-                    for line in content.split('\n'):
-                        self.lines.append(line.strip())
-                except:
-                    pass
-        
-        self.raw_text = "\n".join(all_content)
-    
-    def find_value(self, labels):
-        for i, line in enumerate(self.lines):
-            line_lower = line.lower()
-            for label in labels:
-                label_lower = label.lower()
-                
-                if label_lower in line_lower:
-                    for sep in [':', '=', '|']:
-                        if sep in line:
-                            parts = line.split(sep, 1)
-                            if len(parts) == 2:
-                                value = parts[1].strip()
-                                if value and value.lower() not in ['unknown', 'none', 'null', 'n/a', '', 'undefined']:
-                                    return value
-                    
-                    if i + 1 < len(self.lines):
-                        skip = 0
-                        while i + 1 + skip < len(self.lines):
-                            candidate = self.lines[i + 1 + skip].strip()
-                            if candidate and not all(c in '-_=*#|' for c in candidate):
-                                return candidate
-                            skip += 1
-                            if skip > 5:
-                                break
-        
-        return "Unknown"
-    
-    def find_regex(self, patterns):
-        for pat in patterns:
-            match = re.search(pat, self.raw_text, re.IGNORECASE)
-            if match:
-                value = match.group(1).strip() if match.groups() else match.group(0).strip()
-                if value and value.lower() not in ['unknown', 'none', 'null', 'n/a', '', 'undefined']:
-                    return value
-        return "Unknown"
-    
-    def extract_all(self):
-        result = []
-        
-        result.append("=== EXTRACTED DATA ===\n")
-        
-        fields = [
-            ("Title", ["title", "quelshifish", "quelchifish", "quellenfish", "deniz", "monte", "luanb", "lakum"]),
-            ("aka", ["aka", "real name", "full name"]),
-            ("Tag", ["möchtegern", "tag", "label"]),
-            ("Name", ["full name", "real name", "name"]),
-            ("PC Name", ["pc name", "pc-name", "hostname", "computer name", "device name"]),
-            ("City", ["city", "stadt", "ort", "location", "standort"]),
-            ("ISP", ["isp", "provider", "internet service"]),
-            ("Timezone", ["timezone", "time zone", "zeitzone"]),
-            ("IP Address", ["ip address", "ip-adresse", "ip"]),
-            ("OS Version", ["os version", "os-version", "operating system", "betriebssystem"]),
-            ("GPU", ["gpu", "graphics", "grafikkarte", "video card"]),
-            ("RAM", ["ram", "memory", "arbeitsspeicher"]),
-            ("CPU", ["cpu", "processor", "prozessor"]),
-            ("Phone Number", ["phone number", "phone", "telefon", "telefonnummer", "handy", "mobil"]),
-            ("Discord ID", ["discord id", "user id", "snowflake"]),
-            ("Discord Username", ["discord username", "discord name", "username"]),
-            ("Nitro", ["nitro"]),
-            ("Capture ID", ["capture id", "capture"]),
-            ("Client", ["client"]),
-            ("2FA", ["2fa", "two factor", "two-factor"]),
-            ("Email", ["email", "e-mail", "mail"]),
-            ("Password", ["password", "passwort", "pwd", "pass"]),
-            ("MC Username", ["mc username", "minecraft username", "minecraft name"]),
-            ("UUID", ["uuid"]),
-            ("MC Email", ["mc email", "minecraft email"]),
-            ("MC Password", ["mc password", "mc passwort", "minecraft password"]),
-            ("Social Discord", ["discord"]),
-            ("Social Paypal", ["paypal", "pay pal"]),
-            ("Social Instagram", ["instagram", "insta"]),
-            ("Social Twitch", ["twitch"]),
-            ("Social Github", ["github", "git hub"]),
-            ("Footer Name", ["emre", "deniz", "müssen", "lakum", "footer name", "contact name"]),
-            ("Address", ["straße", "strasse", "address", "adresse"]),
-            ("Footer Email", ["huseyin", "efedeniz", "kamfcyrus", "footer email", "contact email", "icloud", "gmx"]),
-            ("Footer Phone", ["footer phone", "contact phone"]),
-            ("Footer Insta", ["emr", "abbas", "lakum", "footer insta", "footer instagram"]),
-        ]
-        
-        for label, keywords in fields:
-            value = self.find_value(keywords)
+        const unlocked = {};
+
+        function switchTab(tabId) {
+            // Hide all tab contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(c => c.classList.remove('active'));
             
-            if value == "Unknown":
-                if label == "IP Address":
-                    value = self.find_regex([r'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'])
-                elif label == "UUID":
-                    value = self.find_regex([r'([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})'])
-                elif label == "Phone Number":
-                    value = self.find_regex([r'(\+49[^\n]{5,15})', r'(01\d{2,3}\s?\d{6,8})'])
-                elif label == "Email":
-                    value = self.find_regex([r'([A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,})'])
-                elif label == "Discord ID":
-                    value = self.find_regex([r'\b(\d{17,20})\b'])
-                elif label == "Footer Email":
-                    value = self.find_regex([r'([A-Za-z0-9._%+\-]+@icloud\.com)', r'([A-Za-z0-9._%+\-]+@gmx\.[a-z]{2,})'])
+            // Remove active from all buttons
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(b => b.classList.remove('active'));
             
-            result.append(f"{label}: {value}")
-        
-        result.append("")
-        result.append("--- FILES ---")
-        
-        img_count = 0
-        for ext in ['*.png', '*.jpg', '*.jpeg', '*.gif', '*.webp', '*.bmp']:
-            img_count += len(list(self.folder.rglob(ext)))
-        
-        audio_count = 0
-        for ext in ['*.mp3', '*.wav', '*.ogg', '*.m4a']:
-            audio_count += len(list(self.folder.rglob(ext)))
-        
-        result.append(f"Images: {img_count}")
-        result.append(f"Audio: {audio_count}")
-        
-        return "\n".join(result)
-
-
-def process_zip(zip_path):
-    temp_dir = tempfile.mkdtemp()
-    try:
-        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-            zip_ref.extractall(temp_dir)
-        
-        extractor = SimpleExtractor(temp_dir)
-        extractor.read_all_lines()
-        return extractor.extract_all()
-    finally:
-        shutil.rmtree(temp_dir, ignore_errors=True)
-
-
-class App:
-    def __init__(self):
-        self.root = tk.Tk()
-        self.root.title("Arox Leak Viewer v5")
-        self.root.geometry("750x580")
-        self.root.configure(bg='#0d0d0d')
-        
-        self.unlocked_tabs = set()
-        
-        self.notebook = ttk.Notebook(self.root)
-        self.notebook.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
-        
-        # Home Tab
-        self.home_tab = tk.Frame(self.notebook, bg='#0d0d0d')
-        self.notebook.add(self.home_tab, text="Home")
-        self.home_box = scrolledtext.ScrolledText(self.home_tab, wrap=tk.WORD, bg='#0a0a0a', fg='#ddd', font=("Consolas", 11), relief='flat')
-        self.home_box.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
-        self.home_box.insert('1.0', HOME_TEXT)
-        self.home_box.config(state=tk.DISABLED)
-        
-        # Tabs
-        self.tab_quelshifish = self.create_locked_tab("Quelshifish")
-        self.tab_emre = self.create_locked_tab("Emre")
-        self.tab_deniz = self.create_locked_tab("Deniz", DENIZ_TEXT)
-        self.tab_luan = self.create_locked_tab("Luan", LUAN_TEXT)
-        self.tab_lakum = self.create_locked_tab("Lakum")
-        
-        # Button Frame
-        btn_frame = tk.Frame(self.root, bg='#0d0d0d')
-        btn_frame.pack(fill=tk.X, padx=10, pady=5)
-        
-        btn = tk.Button(btn_frame, text="ZIP auswählen", command=self.select_zip, font=("Inter", 11), bg='#1a1a1a', fg='#ffffff', relief='flat', padx=20, pady=8, cursor="hand2")
-        btn.pack(side=tk.LEFT, padx=5)
-        
-        unlock_btn = tk.Button(btn_frame, text="Tab entsperren", command=self.unlock_tab, font=("Inter", 11), bg='#1a1a1a', fg='#ffffff', relief='flat', padx=15, pady=8, cursor="hand2")
-        unlock_btn.pack(side=tk.LEFT, padx=5)
-        
-        self.status = tk.Label(btn_frame, text="Bereit", font=("Inter", 9), fg="#666666", bg="#0d0d0d")
-        self.status.pack(side=tk.LEFT, padx=15)
-    
-    def create_locked_tab(self, name, prefill_text=""):
-        tab = tk.Frame(self.notebook, bg='#0d0d0d')
-        self.notebook.add(tab, text=name)
-        
-        lock_frame = tk.Frame(tab, bg='#0d0d0d')
-        lock_frame.pack(fill=tk.BOTH, expand=True)
-        
-        lock_label = tk.Label(lock_frame, text=f"🔒 GESPERRT\n\nKlick auf 'Tab entsperren'\nPasswort: {name.lower()}2025",
-                              font=("Inter", 14), fg="#666666", bg="#0d0d0d", justify=tk.CENTER)
-        lock_label.pack(expand=True)
-        
-        box = scrolledtext.ScrolledText(tab, wrap=tk.WORD, bg='#0a0a0a', fg='#ddd', font=("Consolas", 10), relief='flat')
-        
-        if prefill_text:
-            box.insert('1.0', prefill_text)
-        
-        tab.box = box
-        tab.lock_frame = lock_frame
-        tab.lock_label = lock_label
-        tab.name = name
-        
-        return tab
-    
-    def unlock_tab(self):
-        current = self.notebook.index(self.notebook.select())
-        tab_names = ["home", "Quelshifish", "Emre", "Deniz", "Luan", "Lakum"]
-        
-        if current == 0:
-            messagebox.showinfo("Info", "Home ist bereits entsperrt")
-            return
-        
-        tab_name = tab_names[current]
-        password = PASSWORDS.get(tab_name, "")
-        
-        user_pw = simpledialog.askstring("Passwort", f"Passwort für {tab_name}:", show="*")
-        
-        if user_pw and user_pw.lower() == password.lower():
-            self.unlocked_tabs.add(tab_name)
+            // Show selected tab
+            document.getElementById('tab-' + tabId).classList.add('active');
             
-            current_tab = self.notebook.nametowidget(self.notebook.select())
-            current_tab.lock_frame.pack_forget()
-            current_tab.box.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
+            // Set active button
+            const btns = document.querySelectorAll('.tab-btn');
+            const tabNames = ['home', 'quelshifish', 'emre', 'deniz', 'luan', 'lakum'];
+            const index = tabNames.indexOf(tabId);
+            if (index >= 0 && btns[index]) {
+                btns[index].classList.add('active');
+            }
+        }
+
+        function unlockTab(tabId) {
+            const pwInput = document.getElementById('pw-' + tabId);
+            const errorEl = document.getElementById('error-' + tabId);
+            const userPw = pwInput.value.trim();
             
-            messagebox.showinfo("Erfolg", f"{tab_name} entsperrt!")
-        else:
-            messagebox.showerror("Falsch", "Falsches Passwort!")
-    
-    def select_zip(self):
-        file_path = filedialog.askopenfilename(filetypes=[("ZIP files", "*.zip")])
-        if file_path:
-            try:
-                self.status.config(text="Verarbeite...")
-                self.root.update()
-                text = process_zip(file_path)
-                
-                current = self.notebook.index(self.notebook.select())
-                
-                tabs = [None, self.tab_quelshifish, self.tab_emre, self.tab_deniz, self.tab_luan, self.tab_lakum]
-                
-                if current < len(tabs) and tabs[current] is not None:
-                    tabs[current].box.delete('1.0', tk.END)
-                    tabs[current].box.insert('1.0', text)
-                
-                self.status.config(text=f"Fertig: {os.path.basename(file_path)}")
-            except Exception as e:
-                self.status.config(text="Fehler")
-                messagebox.showerror("Fehler", str(e))
-    
-    def run(self):
-        self.root.mainloop()
+            if (userPw.toLowerCase() === passwords[tabId].toLowerCase()) {
+                unlocked[tabId] = true;
+                document.getElementById('lock-' + tabId).style.display = 'none';
+                document.getElementById('content-' + tabId).style.display = 'block';
+                errorEl.textContent = '';
+            } else {
+                errorEl.textContent = 'Wrong password!';
+                pwInput.value = '';
+                pwInput.focus();
+            }
+        }
+    </script>
 
-
-if __name__ == "__main__":
-    app = App()
-    app.run()
+</body>
+</html>
