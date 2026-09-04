@@ -7,6 +7,16 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
+        :root {
+            --bg: #0a0a0a;
+            --surface: #111;
+            --border: #1f1f1f;
+            --text: #e5e5e5;
+            --muted: #777;
+            --accent: #fff;
+            --error: #ff4444;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -14,31 +24,67 @@
         }
 
         body {
-            background: #0d0d0d;
+            background: var(--bg);
             font-family: 'Inter', sans-serif;
-            color: #e0e0e0;
+            color: var(--text);
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
         }
 
-        .tab-container {
+        .container {
+            width: 100%;
+            max-width: 900px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: var(--muted);
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        /* Tab Navigation */
+        .tab-nav {
             display: flex;
-            background: #111;
-            border-bottom: 1px solid #222;
-            padding: 0 10px;
-            flex-wrap: wrap;
+            gap: 4px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 6px;
+            margin-bottom: 20px;
+            overflow-x: auto;
         }
 
         .tab-btn {
             background: transparent;
             border: none;
-            color: #888;
-            padding: 15px 20px;
-            font-size: 1rem;
+            color: var(--muted);
+            padding: 12px 20px;
+            font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             font-family: 'Inter', sans-serif;
-            border-bottom: 2px solid transparent;
+            border-radius: 8px;
+            white-space: nowrap;
+            flex: 1;
         }
 
         .tab-btn:hover {
@@ -48,141 +94,273 @@
 
         .tab-btn.active {
             color: #fff;
-            border-bottom-color: #fff;
+            background: #222;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
 
+        /* Content */
         .tab-content {
             display: none;
-            padding: 20px;
-            min-height: calc(100vh - 50px);
+            animation: fadeIn 0.3s ease;
         }
 
         .tab-content.active {
             display: block;
         }
 
-        .text-box {
-            background: #0a0a0a;
-            border: 1px solid #222;
-            border-radius: 8px;
-            padding: 20px;
-            font-family: 'Consolas', monospace;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            color: #ddd;
-            white-space: pre-wrap;
-            word-break: break-all;
-            min-height: 400px;
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(5px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
+        /* Text Box */
+        .text-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 25px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.7;
+            color: #ccc;
+            white-space: pre-wrap;
+            word-break: break-word;
+            min-height: 350px;
+        }
+
+        /* Lock Overlay */
         .lock-overlay {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            min-height: 400px;
-            background: #0a0a0a;
-            border: 1px solid #222;
-            border-radius: 8px;
-            gap: 15px;
+            min-height: 350px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            gap: 20px;
+            padding: 30px;
         }
 
         .lock-icon {
-            font-size: 3rem;
+            font-size: 4rem;
+            opacity: 0.5;
         }
 
-        .lock-text {
-            font-size: 1.2rem;
-            color: #666;
-            text-align: center;
+        .lock-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #ccc;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .lock-hint {
+            font-size: 0.85rem;
+            color: var(--muted);
+            letter-spacing: 1px;
+        }
+
+        .password-form {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
         .password-input {
-            background: #111;
-            border: 1px solid #333;
+            background: #0d0d0d;
+            border: 1px solid var(--border);
             color: #fff;
-            padding: 10px 15px;
-            font-size: 1rem;
-            border-radius: 5px;
+            padding: 12px 18px;
+            font-size: 0.95rem;
+            border-radius: 8px;
             width: 250px;
             text-align: center;
             font-family: 'Consolas', monospace;
+            transition: all 0.3s ease;
         }
 
         .password-input:focus {
             outline: none;
-            border-color: #fff;
+            border-color: #555;
+            box-shadow: 0 0 20px rgba(255,255,255,0.05);
         }
 
         .unlock-btn {
             background: #1a1a1a;
-            border: 1px solid #444;
+            border: 1px solid #333;
             color: #fff;
-            padding: 10px 25px;
-            font-size: 0.9rem;
-            font-weight: 600;
+            padding: 12px 28px;
+            font-size: 0.85rem;
+            font-weight: 700;
             cursor: pointer;
-            border-radius: 5px;
+            border-radius: 8px;
             transition: all 0.3s ease;
             font-family: 'Inter', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .unlock-btn:hover {
             background: #2a2a2a;
-            border-color: #fff;
+            border-color: #555;
         }
 
         .error-text {
-            color: #ff4444;
+            color: var(--error);
+            font-size: 0.8rem;
+            min-height: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Home specific */
+        .home-hero {
+            text-align: center;
+            padding: 60px 20px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+
+        .home-hero h2 {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #fff;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .home-hero .subtitle {
+            color: var(--muted);
+            font-size: 1rem;
+            margin-bottom: 40px;
+            letter-spacing: 1px;
+        }
+
+        .home-tabs-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .home-tab-item {
+            background: #0d0d0d;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 18px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .home-tab-item:hover {
+            border-color: #444;
+            background: #151515;
+        }
+
+        .home-tab-item .name {
+            font-weight: 700;
+            color: #ccc;
+            font-size: 1rem;
+        }
+
+        .home-tab-item .pw {
+            font-size: 0.7rem;
+            color: #555;
+            margin-top: 5px;
+            letter-spacing: 0.5px;
+        }
+
+        .home-footer {
+            margin-top: 40px;
+            color: #555;
             font-size: 0.85rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            .tab-btn {
+                padding: 10px 14px;
+                font-size: 0.8rem;
+            }
+            .text-box {
+                font-size: 0.8rem;
+                padding: 18px;
+            }
+            .home-hero h2 {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
 
-    <div class="tab-container">
-        <button class="tab-btn active" onclick="switchTab('home')">Home</button>
-        <button class="tab-btn" onclick="switchTab('quelshifish')">Quelshifish</button>
-        <button class="tab-btn" onclick="switchTab('emre')">Emre</button>
-        <button class="tab-btn" onclick="switchTab('deniz')">Deniz</button>
-        <button class="tab-btn" onclick="switchTab('luan')">Luan</button>
-        <button class="tab-btn" onclick="switchTab('lakum')">Lakum</button>
-    </div>
-
-    <!-- HOME -->
-    <div id="tab-home" class="tab-content active">
-        <div class="text-box">=== AROX LEAKS ===
-
-This page is from Someone and Arox.
-
-They are some leaks from them.
-
-Tabs:
-- Quelshifish
-- Emre
-- Deniz
-- Luan
-- Lakum
-
-Password for each tab:
-[name]2025
-
-Example: quelshifish2025
-
-Made by Arox &amp; Silence</div>
-    </div>
-
-    <!-- QUELSHIFISH -->
-    <div id="tab-quelshifish" class="tab-content">
-        <div id="lock-quelshifish" class="lock-overlay">
-            <div class="lock-icon">🔒</div>
-            <div class="lock-text">Locked<br>Password: quelshifish2025</div>
-            <input type="password" id="pw-quelshifish" class="password-input" placeholder="Enter password" onkeydown="if(event.key==='Enter') unlockTab('quelshifish')">
-            <button class="unlock-btn" onclick="unlockTab('quelshifish')">Unlock</button>
-            <div id="error-quelshifish" class="error-text"></div>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Arox Leaks</h1>
+            <p>This page is from Someone and Arox. They are some leaks from them.</p>
         </div>
-        <div id="content-quelshifish" style="display:none;">
-            <div class="text-box">=== EXTRACTED DATA ===
+
+        <!-- Tab Navigation -->
+        <div class="tab-nav">
+            <button class="tab-btn active" onclick="switchTab('home')">Home</button>
+            <button class="tab-btn" onclick="switchTab('quelshifish')">Quelshifish</button>
+            <button class="tab-btn" onclick="switchTab('emre')">Emre</button>
+            <button class="tab-btn" onclick="switchTab('deniz')">Deniz</button>
+            <button class="tab-btn" onclick="switchTab('luan')">Luan</button>
+            <button class="tab-btn" onclick="switchTab('lakum')">Lakum</button>
+        </div>
+
+        <!-- HOME -->
+        <div id="tab-home" class="tab-content active">
+            <div class="home-hero">
+                <h2>Welcome</h2>
+                <p class="subtitle">Select a tab to view leaked data</p>
+                <div class="home-tabs-list">
+                    <div class="home-tab-item" onclick="switchTab('quelshifish')">
+                        <div class="name">Quelshifish</div>
+                    </div>
+                    <div class="home-tab-item" onclick="switchTab('emre')">
+                        <div class="name">Emre</div>
+                    </div>
+                    <div class="home-tab-item" onclick="switchTab('deniz')">
+                        <div class="name">Deniz</div>
+                    </div>
+                    <div class="home-tab-item" onclick="switchTab('luan')">
+                        <div class="name">Luan</div>
+                    </div>
+                    <div class="home-tab-item" onclick="switchTab('lakum')">
+                        <div class="name">Lakum</div>
+                    </div>
+                </div>
+                <div class="home-footer">Made by Arox &amp; Silence</div>
+            </div>
+        </div>
+
+        <!-- QUELSHIFISH -->
+        <div id="tab-quelshifish" class="tab-content">
+            <div id="lock-quelshifish" class="lock-overlay">
+                <div class="lock-icon">🔒</div>
+                <div class="lock-title">Locked</div>
+                <div class="lock-hint">Enter password to access</div>
+                <div class="password-form">
+                    <input type="password" id="pw-quelshifish" class="password-input" placeholder="Password" onkeydown="if(event.key==='Enter') unlockTab('quelshifish')">
+                    <button class="unlock-btn" onclick="unlockTab('quelshifish')">Unlock</button>
+                </div>
+                <div id="error-quelshifish" class="error-text"></div>
+            </div>
+            <div id="content-quelshifish" style="display:none;">
+                <div class="text-box">=== EXTRACTED DATA ===
 
 Title: Quelshifish
 aka: David Tuschhoff
@@ -233,20 +411,23 @@ Footer Insta: emr3.kmz
 --- FILES FOUND ---
 Images: 6
 Audio: 0</div>
+            </div>
         </div>
-    </div>
 
-    <!-- EMRE -->
-    <div id="tab-emre" class="tab-content">
-        <div id="lock-emre" class="lock-overlay">
-            <div class="lock-icon">🔒</div>
-            <div class="lock-text">Locked<br>Password: emre2025</div>
-            <input type="password" id="pw-emre" class="password-input" placeholder="Enter password" onkeydown="if(event.key==='Enter') unlockTab('emre')">
-            <button class="unlock-btn" onclick="unlockTab('emre')">Unlock</button>
-            <div id="error-emre" class="error-text"></div>
-        </div>
-        <div id="content-emre" style="display:none;">
-            <div class="text-box">=== EXTRACTED DATA ===
+        <!-- EMRE -->
+        <div id="tab-emre" class="tab-content">
+            <div id="lock-emre" class="lock-overlay">
+                <div class="lock-icon">🔒</div>
+                <div class="lock-title">Locked</div>
+                <div class="lock-hint">Enter password to access</div>
+                <div class="password-form">
+                    <input type="password" id="pw-emre" class="password-input" placeholder="Password" onkeydown="if(event.key==='Enter') unlockTab('emre')">
+                    <button class="unlock-btn" onclick="unlockTab('emre')">Unlock</button>
+                </div>
+                <div id="error-emre" class="error-text"></div>
+            </div>
+            <div id="content-emre" style="display:none;">
+                <div class="text-box">=== EXTRACTED DATA ===
 
 Title: emre
 aka: Unknown
@@ -298,20 +479,23 @@ Footer Insta: emr3.kmz
 --- FILES FOUND ---
 Images: 3
 Audio: 0</div>
+            </div>
         </div>
-    </div>
 
-    <!-- DENIZ -->
-    <div id="tab-deniz" class="tab-content">
-        <div id="lock-deniz" class="lock-overlay">
-            <div class="lock-icon">🔒</div>
-            <div class="lock-text">Locked<br>Password: deniz2025</div>
-            <input type="password" id="pw-deniz" class="password-input" placeholder="Enter password" onkeydown="if(event.key==='Enter') unlockTab('deniz')">
-            <button class="unlock-btn" onclick="unlockTab('deniz')">Unlock</button>
-            <div id="error-deniz" class="error-text"></div>
-        </div>
-        <div id="content-deniz" style="display:none;">
-            <div class="text-box">=== EXTRACTED DATA ===
+        <!-- DENIZ -->
+        <div id="tab-deniz" class="tab-content">
+            <div id="lock-deniz" class="lock-overlay">
+                <div class="lock-icon">🔒</div>
+                <div class="lock-title">Locked</div>
+                <div class="lock-hint">Enter password to access</div>
+                <div class="password-form">
+                    <input type="password" id="pw-deniz" class="password-input" placeholder="Password" onkeydown="if(event.key==='Enter') unlockTab('deniz')">
+                    <button class="unlock-btn" onclick="unlockTab('deniz')">Unlock</button>
+                </div>
+                <div id="error-deniz" class="error-text"></div>
+            </div>
+            <div id="content-deniz" style="display:none;">
+                <div class="text-box">=== EXTRACTED DATA ===
 
 Title: deniz
 aka: Monte
@@ -363,20 +547,23 @@ Footer Insta: abbas.w47
 --- FILES FOUND ---
 Images: 1
 Audio: 0</div>
+            </div>
         </div>
-    </div>
 
-    <!-- LUAN -->
-    <div id="tab-luan" class="tab-content">
-        <div id="lock-luan" class="lock-overlay">
-            <div class="lock-icon">🔒</div>
-            <div class="lock-text">Locked<br>Password: luan2025</div>
-            <input type="password" id="pw-luan" class="password-input" placeholder="Enter password" onkeydown="if(event.key==='Enter') unlockTab('luan')">
-            <button class="unlock-btn" onclick="unlockTab('luan')">Unlock</button>
-            <div id="error-luan" class="error-text"></div>
-        </div>
-        <div id="content-luan" style="display:none;">
-            <div class="text-box">=== EXTRACTED DATA ===
+        <!-- LUAN -->
+        <div id="tab-luan" class="tab-content">
+            <div id="lock-luan" class="lock-overlay">
+                <div class="lock-icon">🔒</div>
+                <div class="lock-title">Locked</div>
+                <div class="lock-hint">Enter password to access</div>
+                <div class="password-form">
+                    <input type="password" id="pw-luan" class="password-input" placeholder="Password" onkeydown="if(event.key==='Enter') unlockTab('luan')">
+                    <button class="unlock-btn" onclick="unlockTab('luan')">Unlock</button>
+                </div>
+                <div id="error-luan" class="error-text"></div>
+            </div>
+            <div id="content-luan" style="display:none;">
+                <div class="text-box">=== EXTRACTED DATA ===
 
 Title: luanb
 aka: Unknown
@@ -428,20 +615,23 @@ Footer Insta: emr
 --- FILES FOUND ---
 Images: 1
 Audio: 0</div>
+            </div>
         </div>
-    </div>
 
-    <!-- LAKUM -->
-    <div id="tab-lakum" class="tab-content">
-        <div id="lock-lakum" class="lock-overlay">
-            <div class="lock-icon">🔒</div>
-            <div class="lock-text">Locked<br>Password: lakum2025</div>
-            <input type="password" id="pw-lakum" class="password-input" placeholder="Enter password" onkeydown="if(event.key==='Enter') unlockTab('lakum')">
-            <button class="unlock-btn" onclick="unlockTab('lakum')">Unlock</button>
-            <div id="error-lakum" class="error-text"></div>
-        </div>
-        <div id="content-lakum" style="display:none;">
-            <div class="text-box">=== EXTRACTED DATA ===
+        <!-- LAKUM -->
+        <div id="tab-lakum" class="tab-content">
+            <div id="lock-lakum" class="lock-overlay">
+                <div class="lock-icon">🔒</div>
+                <div class="lock-title">Locked</div>
+                <div class="lock-hint">Enter password to access</div>
+                <div class="password-form">
+                    <input type="password" id="pw-lakum" class="password-input" placeholder="Password" onkeydown="if(event.key==='Enter') unlockTab('lakum')">
+                    <button class="unlock-btn" onclick="unlockTab('lakum')">Unlock</button>
+                </div>
+                <div id="error-lakum" class="error-text"></div>
+            </div>
+            <div id="content-lakum" style="display:none;">
+                <div class="text-box">=== EXTRACTED DATA ===
 
 Title: Lakum
 aka: Unknown
@@ -492,7 +682,9 @@ Footer Insta: Unknown
 --- FILES FOUND ---
 Images: 0
 Audio: 0</div>
+            </div>
         </div>
+
     </div>
 
     <script>
@@ -504,23 +696,14 @@ Audio: 0</div>
             lakum: 'lakum2025'
         };
 
-        const unlocked = {};
-
         function switchTab(tabId) {
-            // Hide all tab contents
-            const contents = document.querySelectorAll('.tab-content');
-            contents.forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             
-            // Remove active from all buttons
-            const buttons = document.querySelectorAll('.tab-btn');
-            buttons.forEach(b => b.classList.remove('active'));
-            
-            // Show selected tab
             document.getElementById('tab-' + tabId).classList.add('active');
             
-            // Set active button
-            const btns = document.querySelectorAll('.tab-btn');
             const tabNames = ['home', 'quelshifish', 'emre', 'deniz', 'luan', 'lakum'];
+            const btns = document.querySelectorAll('.tab-btn');
             const index = tabNames.indexOf(tabId);
             if (index >= 0 && btns[index]) {
                 btns[index].classList.add('active');
@@ -533,12 +716,11 @@ Audio: 0</div>
             const userPw = pwInput.value.trim();
             
             if (userPw.toLowerCase() === passwords[tabId].toLowerCase()) {
-                unlocked[tabId] = true;
                 document.getElementById('lock-' + tabId).style.display = 'none';
                 document.getElementById('content-' + tabId).style.display = 'block';
                 errorEl.textContent = '';
             } else {
-                errorEl.textContent = 'Wrong password!';
+                errorEl.textContent = 'Wrong password';
                 pwInput.value = '';
                 pwInput.focus();
             }
