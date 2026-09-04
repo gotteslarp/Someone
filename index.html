@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arox Leak Viewer</title>
+    <title>Arox Leaks</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
@@ -13,7 +13,6 @@
             --border: #1f1f1f;
             --text: #e5e5e5;
             --muted: #777;
-            --accent: #fff;
             --error: #ff4444;
         }
 
@@ -39,7 +38,6 @@
             max-width: 900px;
         }
 
-        /* Header */
         .header {
             text-align: center;
             margin-bottom: 30px;
@@ -60,7 +58,6 @@
             letter-spacing: 1px;
         }
 
-        /* Tab Navigation */
         .tab-nav {
             display: flex;
             gap: 4px;
@@ -98,7 +95,6 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
 
-        /* Content */
         .tab-content {
             display: none;
             animation: fadeIn 0.3s ease;
@@ -113,7 +109,6 @@
             100% { opacity: 1; transform: translateY(0); }
         }
 
-        /* Text Box */
         .text-box {
             background: var(--surface);
             border: 1px solid var(--border);
@@ -128,7 +123,6 @@
             min-height: 350px;
         }
 
-        /* Lock Overlay */
         .lock-overlay {
             display: flex;
             flex-direction: column;
@@ -140,11 +134,6 @@
             border-radius: 12px;
             gap: 20px;
             padding: 30px;
-        }
-
-        .lock-icon {
-            font-size: 4rem;
-            opacity: 0.5;
         }
 
         .lock-title {
@@ -215,7 +204,6 @@
             letter-spacing: 0.5px;
         }
 
-        /* Home specific */
         .home-hero {
             text-align: center;
             padding: 60px 20px;
@@ -269,19 +257,57 @@
             font-size: 1rem;
         }
 
-        .home-tab-item .pw {
-            font-size: 0.7rem;
-            color: #555;
-            margin-top: 5px;
-            letter-spacing: 0.5px;
-        }
-
         .home-footer {
             margin-top: 40px;
             color: #555;
             font-size: 0.85rem;
             letter-spacing: 2px;
             text-transform: uppercase;
+        }
+
+        /* Entry screen */
+        #entry-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: #0a0a0a;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            cursor: pointer;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+            gap: 25px;
+        }
+
+        #entry-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .entry-text {
+            font-size: 5rem;
+            font-weight: 900;
+            color: #fff;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            animation: pulse 1.5s ease-in-out infinite;
+            user-select: none;
+        }
+
+        .entry-sub {
+            font-size: 1rem;
+            color: #555;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
 
         @media (max-width: 600px) {
@@ -299,19 +325,27 @@
             .home-hero h2 {
                 font-size: 1.5rem;
             }
+            .entry-text {
+                font-size: 3rem;
+                letter-spacing: 3px;
+            }
         }
     </style>
 </head>
 <body>
 
+    <!-- Entry Screen -->
+    <div id="entry-screen" onclick="enterSite()">
+        <div class="entry-text">Click Me</div>
+        <div class="entry-sub">Enter</div>
+    </div>
+
     <div class="container">
-        <!-- Header -->
         <div class="header">
             <h1>Arox Leaks</h1>
-            <p>This page is from Someone and Arox. They are some leaks from them.</p>
+            <p>Collected data. View at your own risk.</p>
         </div>
 
-        <!-- Tab Navigation -->
         <div class="tab-nav">
             <button class="tab-btn active" onclick="switchTab('home')">Home</button>
             <button class="tab-btn" onclick="switchTab('quelshifish')">Quelshifish</button>
@@ -327,21 +361,11 @@
                 <h2>Welcome</h2>
                 <p class="subtitle">Select a tab to view leaked data</p>
                 <div class="home-tabs-list">
-                    <div class="home-tab-item" onclick="switchTab('quelshifish')">
-                        <div class="name">Quelshifish</div>
-                    </div>
-                    <div class="home-tab-item" onclick="switchTab('emre')">
-                        <div class="name">Emre</div>
-                    </div>
-                    <div class="home-tab-item" onclick="switchTab('deniz')">
-                        <div class="name">Deniz</div>
-                    </div>
-                    <div class="home-tab-item" onclick="switchTab('luan')">
-                        <div class="name">Luan</div>
-                    </div>
-                    <div class="home-tab-item" onclick="switchTab('lakum')">
-                        <div class="name">Lakum</div>
-                    </div>
+                    <div class="home-tab-item" onclick="switchTab('quelshifish')"><div class="name">Quelshifish</div></div>
+                    <div class="home-tab-item" onclick="switchTab('emre')"><div class="name">Emre</div></div>
+                    <div class="home-tab-item" onclick="switchTab('deniz')"><div class="name">Deniz</div></div>
+                    <div class="home-tab-item" onclick="switchTab('luan')"><div class="name">Luan</div></div>
+                    <div class="home-tab-item" onclick="switchTab('lakum')"><div class="name">Lakum</div></div>
                 </div>
                 <div class="home-footer">Made by Arox &amp; Silence</div>
             </div>
@@ -350,7 +374,6 @@
         <!-- QUELSHIFISH -->
         <div id="tab-quelshifish" class="tab-content">
             <div id="lock-quelshifish" class="lock-overlay">
-                <div class="lock-icon">🔒</div>
                 <div class="lock-title">Locked</div>
                 <div class="lock-hint">Enter password to access</div>
                 <div class="password-form">
@@ -360,64 +383,43 @@
                 <div id="error-quelshifish" class="error-text"></div>
             </div>
             <div id="content-quelshifish" style="display:none;">
-                <div class="text-box">=== EXTRACTED DATA ===
+                <div class="text-box">=== DATA ===
 
-Title: Quelshifish
+Name: Quelshifish
 aka: David Tuschhoff
-Tag: Möchtegern Beefer
 
---- FULL INFO ---
-Name: David Tuschhoff
-City: Köln
-ISP: AS8422 NetCologne Gesellschaft fur Telekommunikation mbH
-IP Address: 87.79.112.247
-PC Name: DESKTOP-19QCMUN
-OS Version: Windows 11 (Home)
+--- SYSTEM ---
+City: Koln
+ISP: AS8422 NetCologne
+IP: 87.79.112.247
+PC: DESKTOP-19QCMUN
+OS: Windows 11 Home
 GPU: NVIDIA GeForce RTX 4060 TI
-CPU: AMD Ryzen 5 7600 6-Core Processor
-RAM: 31GB (31895)
-Phone Number: +4915738376079
+CPU: AMD Ryzen 5 7600 6-Core
+RAM: 31GB
+Phone: +4915738376079
 
 --- DISCORD ---
-Discord ID: 1445474142953406545
-Username: quelchifish
-Nitro: No
-Capture ID: bbc1e381-eeab-47c2-8876-707aae522087
-Client: David@DESKTOP-19QCMUN
-2FA Enabled: No
+ID: 1445474142953406545
+User: quelchifish
 Email: s.tuschhoff@netcologne.de
 Password: discord8365!
 
 --- MINECRAFT ---
-Username: Quelchifish
+User: Quelchifish
 UUID: ad92f1dd-2946-4a2a-9e66-6d6be891431f
-Email: Unknown
-Password: Unknown
 
---- SOCIAL LOGINS ---
-Discord: s.tuschhoff@netcologne.de | discord8365!
-Paypal: s.tuschhoff@netcologne.de | Urlaubisttoll!
-Instagram: david.t.13 | instagram8365!
-Twitch: davidtuschhoff123@gmail.com | twitch8365!
-Github: Quellenfish | github8365!
-
---- FOOTER ---
-Footer Name: emre kocamaz
-Address: Hans-Dietrich-Straße 13
-Footer Email: huseyinkocamaz46@icloud.com
-Footer Phone: +49 174 8342286
-Footer Insta: emr3.kmz
-
---- FILES FOUND ---
-Images: 6
-Audio: 0</div>
+--- ACCOUNTS ---
+Paypal: s.tuschhoff@netcologne.de
+Instagram: david.t.13
+Twitch: davidtuschhoff123@gmail.com
+Github: Quellenfish</div>
             </div>
         </div>
 
         <!-- EMRE -->
         <div id="tab-emre" class="tab-content">
             <div id="lock-emre" class="lock-overlay">
-                <div class="lock-icon">🔒</div>
                 <div class="lock-title">Locked</div>
                 <div class="lock-hint">Enter password to access</div>
                 <div class="password-form">
@@ -427,65 +429,23 @@ Audio: 0</div>
                 <div id="error-emre" class="error-text"></div>
             </div>
             <div id="content-emre" style="display:none;">
-                <div class="text-box">=== EXTRACTED DATA ===
+                <div class="text-box">=== DATA ===
 
-Title: emre
-aka: Unknown
-Tag: Unknown
+Name: Emre Kocamaz
 
---- FULL INFO ---
-Name: emre kocamaz
-Address: Hans-Dietrich-Straße 13
-City: Unknown
-ISP: Unknown
-IP Address: Unknown
-PC Name: Unknown
-OS Version: Unknown
-GPU: Unknown
-CPU: Unknown
-RAM: Unknown
-Phone Number: +49 174 8342286
+--- SYSTEM ---
+Address: Hans-Dietrich-Strasse 13
+Phone: +49 174 8342286
 
---- DISCORD ---
-Discord ID: Unknown
-Username: Unknown
-Nitro: Unknown
-Capture ID: Unknown
-Client: Unknown
-2FA Enabled: Unknown
+--- ACCOUNTS ---
 Email: huseyinkocamaz46@icloud.com
-Password: Unknown
-
---- MINECRAFT ---
-Username: Unknown
-UUID: Unknown
-Email: Unknown
-Password: Unknown
-
---- SOCIAL LOGINS ---
-Discord: Unknown
-Paypal: Unknown
-Instagram: emr3.kmz
-Twitch: Unknown
-Github: Unknown
-
---- FOOTER ---
-Footer Name: emre kocamaz
-Address: Hans-Dietrich-Straße 13
-Footer Email: huseyinkocamaz46@icloud.com
-Footer Phone: +49 174 8342286
-Footer Insta: emr3.kmz
-
---- FILES FOUND ---
-Images: 3
-Audio: 0</div>
+Instagram: emr3.kmz</div>
             </div>
         </div>
 
         <!-- DENIZ -->
         <div id="tab-deniz" class="tab-content">
             <div id="lock-deniz" class="lock-overlay">
-                <div class="lock-icon">🔒</div>
                 <div class="lock-title">Locked</div>
                 <div class="lock-hint">Enter password to access</div>
                 <div class="password-form">
@@ -495,65 +455,39 @@ Audio: 0</div>
                 <div id="error-deniz" class="error-text"></div>
             </div>
             <div id="content-deniz" style="display:none;">
-                <div class="text-box">=== EXTRACTED DATA ===
+                <div class="text-box">=== DATA ===
 
-Title: deniz
+Name: Deniz
 aka: Monte
-Tag: Unknown
 
---- FULL INFO ---
-Name: deniz
-PC Name: DENIZABIII
+--- SYSTEM ---
+PC: DENIZABIII
 City: Neuwied
-ISP: AS3320 Deutsche Telekom AG
-Timezone: Unknown
-IP Address: 84.150.138.103
-OS Version: Windows 11 (Home)
+ISP: AS3320 Deutsche Telekom
+IP: 84.150.138.103
+OS: Windows 11 Home
 GPU: NVIDIA GeForce RTX 4060
 CPU: Intel
-RAM: 15 GB
-Phone Number: +49015172645813
+RAM: 15GB
+Phone: +49015172645813
 
 --- DISCORD ---
-Discord ID: 78445129419350073776
-Username: gmail.com
-Nitro: Unknown
-Capture ID: 3ef62867-8144-4eaf-9f50-0c3f6e76f48f
-Client: firefox-b-d
-2FA Enabled: no
+ID: 78445129419350073776
 Email: denizrmnikmr@gmail.com
 Password: Sng334228s
 
 --- MINECRAFT ---
-Username: Unknown
 UUID: 3ef62867-8144-4eaf-9f50-0c3f6e76f48f
-Email: Unknown
-Password: Unknown
 
---- SOCIAL LOGINS ---
-Discord: Unknown
-Paypal: Unknown
-Instagram: &amp; TikTok | https://pfps.gg/banners/animated#google_vignette
-Twitch: https://www.twitch.tv/
-Github: Unknown
-
---- FOOTER ---
-Footer Name: Müssen
-Address: Unknown
-Footer Email: efedeniz2603@icloud.com
-Footer Phone: +49015172645813
-Footer Insta: abbas.w47
-
---- FILES FOUND ---
-Images: 1
-Audio: 0</div>
+--- ACCOUNTS ---
+Instagram: abbas.w47
+Footer Email: efedeniz2603@icloud.com</div>
             </div>
         </div>
 
         <!-- LUAN -->
         <div id="tab-luan" class="tab-content">
             <div id="lock-luan" class="lock-overlay">
-                <div class="lock-icon">🔒</div>
                 <div class="lock-title">Locked</div>
                 <div class="lock-hint">Enter password to access</div>
                 <div class="password-form">
@@ -563,65 +497,44 @@ Audio: 0</div>
                 <div id="error-luan" class="error-text"></div>
             </div>
             <div id="content-luan" style="display:none;">
-                <div class="text-box">=== EXTRACTED DATA ===
+                <div class="text-box">=== DATA ===
 
-Title: luanb
-aka: Unknown
-Tag: Unknown
+Name: Luanb
 
---- FULL INFO ---
-Name: luanb
-PC Name: LUANS-PC
-City: Frankfurt
-ISP: AS3320 Deutsche Telekom AG
-Timezone: Unknown
-IP Address: 80.187.103.199
-OS Version: Windows 11 (Pro)
+--- SYSTEM ---
+PC: LUANS-PC
+OS: Windows 11 Pro
 GPU: NVIDIA GeForce RTX 3060 Ti
-CPU: AMD Ryzen 5 5600 6-Core Processor
-RAM: 31 GB
-Phone Number: 011733488044
-
---- DISCORD ---
-Discord ID: 1247209923519971420
-Username: gmx.us
-Nitro: Unknown
-Capture ID: 97a4bb3f-5e93-475f-8f9b-7262dc2bd900
-Client: for
-2FA Enabled: no
-Email: kamfcyrus@gmx.us
-Password: TUbb1t5wD9Q
+CPU: AMD Ryzen 5 5600 6-Core
+RAM: 31GB
+IP: 80.187.103.199
+ISP: AS3320 Deutsche Telekom
+City: Frankfurt
 
 --- MINECRAFT ---
-Username: Unknown
-UUID: 97a4bb3f-5e93-475f-8f9b-7262dc2bd900
-Email: Unknown
-Password: Unknown
+User: kommrunterbro
+UUID: 2feffa4e-627d-4924-8c0f-f38101a4ebd8
 
---- SOCIAL LOGINS ---
-Discord: Unknown
-Paypal: Unknown
-Instagram: | https://www.instagram.com/
-Twitch: Unknown
-Github: Unknown
+--- DISCORD ---
+User: background.de
+Display: background.de
+Email: luanbrs17@gmail.com
+ID: 1504633896355106908
 
---- FOOTER ---
-Footer Name: Unknown
-Address: Unknown
-Footer Email: Unknown
-Footer Phone: Unknown
-Footer Insta: emr
-
---- FILES FOUND ---
-Images: 1
-Audio: 0</div>
+--- MAILS ---
+brsluan2@gmail.com
+cynthia.tiger2917@gmx.com
+luanbe2502@gmail.com
+joeonogacc@gmail.com
+ipfya0zi@cyy9.vystella.cfd
+kamfcyrus@gmx.us
+ardiberisha511@gmail.com</div>
             </div>
         </div>
 
         <!-- LAKUM -->
         <div id="tab-lakum" class="tab-content">
             <div id="lock-lakum" class="lock-overlay">
-                <div class="lock-icon">🔒</div>
                 <div class="lock-title">Locked</div>
                 <div class="lock-hint">Enter password to access</div>
                 <div class="password-form">
@@ -631,64 +544,44 @@ Audio: 0</div>
                 <div id="error-lakum" class="error-text"></div>
             </div>
             <div id="content-lakum" style="display:none;">
-                <div class="text-box">=== EXTRACTED DATA ===
+                <div class="text-box">=== DATA ===
 
-Title: Lakum
-aka: Unknown
-Tag: Unknown
+Name: Luca Provata
 
---- FULL INFO ---
-Name: Unknown
-PC Name: Unknown
-City: Unknown
-ISP: Unknown
-IP Address: Unknown
-OS Version: Unknown
-GPU: Unknown
-CPU: Unknown
-RAM: Unknown
-Phone Number: Unknown
+--- SYSTEM ---
+IP: 82.135.87.64
+ISP: AS8767 M-net Telekommunikations GmbH
+CPU: AMD Ryzen Threadripper 1900X 8-Core
+OS: Windows 11 Home
+GPU: NVIDIA GeForce GTX 1060 6GB
+RAM: 15GB
+City: Nuremberg
 
 --- DISCORD ---
-Discord ID: Unknown
-Username: Unknown
-Nitro: Unknown
-Capture ID: Unknown
-Client: Unknown
-2FA Enabled: Unknown
-Email: Unknown
-Password: Unknown
+Email: lakum.st155@proton.me
+Name: 870158015
+ID: 1446898850806632622
 
 --- MINECRAFT ---
-Username: Unknown
-UUID: Unknown
-Email: Unknown
-Password: Unknown
+User: xym1h
+UUID: db875917-de5e-421e-8560-9ddec753097c
 
---- SOCIAL LOGINS ---
-Discord: Unknown
-Paypal: Unknown
-Instagram: Unknown
-Twitch: Unknown
-Github: Unknown
-
---- FOOTER ---
-Footer Name: Unknown
-Address: Unknown
-Footer Email: Unknown
-Footer Phone: Unknown
-Footer Insta: Unknown
-
---- FILES FOUND ---
-Images: 0
-Audio: 0</div>
+--- MAILS ---
+bbrsluca@gmail.com
+provatasjill8@gmail.com
+lucaprovata@gmail.com
+provatasluca88@gmail.com
+niggoprovatas@gmail.com
+kvmwebsite521@gmail.com
+luanbrs40@gmail.com
+leon.kamper.petra@gmail.com</div>
             </div>
         </div>
 
     </div>
 
     <script>
-        const passwords = {
+        var passwords = {
             quelshifish: 'quelshifish2025',
             emre: 'emre2025',
             deniz: 'deniz2025',
@@ -696,24 +589,35 @@ Audio: 0</div>
             lakum: 'lakum2025'
         };
 
+        function enterSite() {
+            document.getElementById('entry-screen').classList.add('hidden');
+        }
+
         function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            var contents = document.querySelectorAll('.tab-content');
+            for (var i = 0; i < contents.length; i++) {
+                contents[i].classList.remove('active');
+            }
+            
+            var buttons = document.querySelectorAll('.tab-btn');
+            for (var j = 0; j < buttons.length; j++) {
+                buttons[j].classList.remove('active');
+            }
             
             document.getElementById('tab-' + tabId).classList.add('active');
             
-            const tabNames = ['home', 'quelshifish', 'emre', 'deniz', 'luan', 'lakum'];
-            const btns = document.querySelectorAll('.tab-btn');
-            const index = tabNames.indexOf(tabId);
+            var tabNames = ['home', 'quelshifish', 'emre', 'deniz', 'luan', 'lakum'];
+            var btns = document.querySelectorAll('.tab-btn');
+            var index = tabNames.indexOf(tabId);
             if (index >= 0 && btns[index]) {
                 btns[index].classList.add('active');
             }
         }
 
         function unlockTab(tabId) {
-            const pwInput = document.getElementById('pw-' + tabId);
-            const errorEl = document.getElementById('error-' + tabId);
-            const userPw = pwInput.value.trim();
+            var pwInput = document.getElementById('pw-' + tabId);
+            var errorEl = document.getElementById('error-' + tabId);
+            var userPw = pwInput.value.trim();
             
             if (userPw.toLowerCase() === passwords[tabId].toLowerCase()) {
                 document.getElementById('lock-' + tabId).style.display = 'none';
@@ -725,6 +629,14 @@ Audio: 0</div>
                 pwInput.focus();
             }
         }
+
+        // Auto enter after 5 seconds
+        setTimeout(function() {
+            var entry = document.getElementById('entry-screen');
+            if (!entry.classList.contains('hidden')) {
+                enterSite();
+            }
+        }, 5000);
     </script>
 
 </body>
